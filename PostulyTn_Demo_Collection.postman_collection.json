@@ -1,0 +1,622 @@
+{
+  "info": {
+    "name": "PostulyTn Microservices Demo",
+    "description": "Complete demo collection for PostulyTn recruitment platform",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. Authentication",
+      "item": [
+        {
+          "name": "Register Recruiter",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Ahmed Ben Ali\",\n  \"email\": \"ahmed@techinnovators.tn\",\n  \"password\": \"SecurePass123!\",\n  \"companyId\": 1,\n  \"role\": \"RECRUITER\"\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/auth/register",
+              "host": ["{{BASE_URL}}"],
+              "path": ["auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "pm.environment.set(\"TOKEN\", jsonData.token);",
+                  "pm.environment.set(\"REFRESH_TOKEN\", jsonData.refreshToken);",
+                  "pm.environment.set(\"RECRUITER_ID\", jsonData.recruiterId);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"ahmed@techinnovators.tn\",\n  \"password\": \"SecurePass123!\"\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/auth/login",
+              "host": ["{{BASE_URL}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Refresh Token",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refreshToken\": \"{{REFRESH_TOKEN}}\"\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/auth/refresh",
+              "host": ["{{BASE_URL}}"],
+              "path": ["auth", "refresh"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Companies",
+      "item": [
+        {
+          "name": "Create Company",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "pm.environment.set(\"COMPANY_ID\", jsonData.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{TOKEN}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Tech Innovators Ltd\",\n  \"description\": \"Leading software development company\",\n  \"industry\": \"Technology\",\n  \"location\": \"Tunis, Tunisia\",\n  \"website\": \"https://techinnovators.tn\"\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/companies",
+              "host": ["{{BASE_URL}}"],
+              "path": ["companies"]
+            }
+          }
+        },
+        {
+          "name": "Get All Companies",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{TOKEN}}"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/companies",
+              "host": ["{{BASE_URL}}"],
+              "path": ["companies"]
+            }
+          }
+        },
+        {
+          "name": "Get Company by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{TOKEN}}"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/companies/{{COMPANY_ID}}",
+              "host": ["{{BASE_URL}}"],
+              "path": ["companies", "{{COMPANY_ID}}"]
+            }
+          }
+        },
+        {
+          "name": "Check Company Exists",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{TOKEN}}"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/companies/{{COMPANY_ID}}/exists",
+              "host": ["{{BASE_URL}}"],
+              "path": ["companies", "{{COMPANY_ID}}", "exists"]
+            }
+          }
+        },
+        {
+          "name": "Delete Company",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{TOKEN}}"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/companies/{{COMPANY_ID}}",
+              "host": ["{{BASE_URL}}"],
+              "path": ["companies", "{{COMPANY_ID}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Recruiters",
+      "item": [
+        {
+          "name": "Get All Recruiters",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{TOKEN}}"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/recruiters",
+              "host": ["{{BASE_URL}}"],
+              "path": ["recruiters"]
+            }
+          }
+        },
+        {
+          "name": "Get Recruiter by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{TOKEN}}"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/recruiters/{{RECRUITER_ID}}",
+              "host": ["{{BASE_URL}}"],
+              "path": ["recruiters", "{{RECRUITER_ID}}"]
+            }
+          }
+        },
+        {
+          "name": "Get Recruiter by Email",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{TOKEN}}"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/recruiters/email/ahmed@techinnovators.tn",
+              "host": ["{{BASE_URL}}"],
+              "path": ["recruiters", "email", "ahmed@techinnovators.tn"]
+            }
+          }
+        },
+        {
+          "name": "Get Recruiters by Company",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{TOKEN}}"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/recruiters/company/{{COMPANY_ID}}",
+              "host": ["{{BASE_URL}}"],
+              "path": ["recruiters", "company", "{{COMPANY_ID}}"]
+            }
+          }
+        },
+        {
+          "name": "Update Recruiter",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{TOKEN}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Ahmed Ben Ali (Updated)\",\n  \"email\": \"ahmed@techinnovators.tn\",\n  \"role\": \"RECRUITER\",\n  \"companyId\": 1\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/recruiters/{{RECRUITER_ID}}",
+              "host": ["{{BASE_URL}}"],
+              "path": ["recruiters", "{{RECRUITER_ID}}"]
+            }
+          }
+        },
+        {
+          "name": "Delete Recruiter",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{TOKEN}}"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/recruiters/{{RECRUITER_ID}}",
+              "host": ["{{BASE_URL}}"],
+              "path": ["recruiters", "{{RECRUITER_ID}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Jobs",
+      "item": [
+        {
+          "name": "Create Job",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "pm.environment.set(\"JOB_ID\", jsonData.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{TOKEN}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Senior Full Stack Developer\",\n  \"description\": \"We are looking for an experienced full-stack developer proficient in Java Spring Boot and React\",\n  \"requirements\": \"5+ years experience, Java, Spring Boot, React, PostgreSQL\",\n  \"location\": \"Tunis, Tunisia\",\n  \"salary\": \"3000-4500 TND\",\n  \"jobType\": \"FULL_TIME\",\n  \"companyId\": {{COMPANY_ID}},\n  \"postedBy\": {{RECRUITER_ID}}\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/jobs",
+              "host": ["{{BASE_URL}}"],
+              "path": ["jobs"]
+            }
+          }
+        },
+        {
+          "name": "Get All Jobs",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{TOKEN}}"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/jobs",
+              "host": ["{{BASE_URL}}"],
+              "path": ["jobs"]
+            }
+          }
+        },
+        {
+          "name": "Get Jobs by Company",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{TOKEN}}"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/jobs/company/{{COMPANY_ID}}",
+              "host": ["{{BASE_URL}}"],
+              "path": ["jobs", "company", "{{COMPANY_ID}}"]
+            }
+          }
+        },
+        {
+          "name": "Check Job Exists",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{TOKEN}}"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/jobs/{{JOB_ID}}/exists",
+              "host": ["{{BASE_URL}}"],
+              "path": ["jobs", "{{JOB_ID}}", "exists"]
+            }
+          }
+        },
+        {
+          "name": "Delete Job",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{TOKEN}}"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/jobs/{{JOB_ID}}",
+              "host": ["{{BASE_URL}}"],
+              "path": ["jobs", "{{JOB_ID}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Applications",
+      "item": [
+        {
+          "name": "Submit Application",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "pm.environment.set(\"APPLICATION_ID\", jsonData.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{TOKEN}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"jobId\": {{JOB_ID}},\n  \"candidateName\": \"Sara Mohamed\",\n  \"candidateEmail\": \"sara.mohamed@email.com\",\n  \"candidatePhone\": \"+216 20 123 456\",\n  \"resumeUrl\": \"https://storage.example.com/resumes/sara-mohamed.pdf\",\n  \"coverLetter\": \"I am very interested in the Full Stack Developer position and believe my skills align perfectly with your requirements.\"\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/applications",
+              "host": ["{{BASE_URL}}"],
+              "path": ["applications"]
+            }
+          }
+        },
+        {
+          "name": "Get All Applications",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{TOKEN}}"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/applications",
+              "host": ["{{BASE_URL}}"],
+              "path": ["applications"]
+            }
+          }
+        },
+        {
+          "name": "Get Applications by Job",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{TOKEN}}"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/applications/job/{{JOB_ID}}",
+              "host": ["{{BASE_URL}}"],
+              "path": ["applications", "job", "{{JOB_ID}}"]
+            }
+          }
+        },
+        {
+          "name": "Update Application Status - REVIEWED",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{TOKEN}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"REVIEWED\"\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/applications/{{APPLICATION_ID}}/status",
+              "host": ["{{BASE_URL}}"],
+              "path": ["applications", "{{APPLICATION_ID}}", "status"]
+            }
+          }
+        },
+        {
+          "name": "Update Application Status - ACCEPTED",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{TOKEN}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"ACCEPTED\"\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/applications/{{APPLICATION_ID}}/status",
+              "host": ["{{BASE_URL}}"],
+              "path": ["applications", "{{APPLICATION_ID}}", "status"]
+            }
+          }
+        },
+        {
+          "name": "Delete Application",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{TOKEN}}"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/applications/{{APPLICATION_ID}}",
+              "host": ["{{BASE_URL}}"],
+              "path": ["applications", "{{APPLICATION_ID}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "6. Error Handling",
+      "item": [
+        {
+          "name": "Invalid Token",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer invalid_token_here"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/jobs",
+              "host": ["{{BASE_URL}}"],
+              "path": ["jobs"]
+            }
+          }
+        },
+        {
+          "name": "Missing Authorization",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{BASE_URL}}/jobs",
+              "host": ["{{BASE_URL}}"],
+              "path": ["jobs"]
+            }
+          }
+        },
+        {
+          "name": "Non-Existent Company",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{TOKEN}}"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/companies/999",
+              "host": ["{{BASE_URL}}"],
+              "path": ["companies", "999"]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "BASE_URL",
+      "value": "http://localhost:8080",
+      "type": "string"
+    }
+  ]
+}
